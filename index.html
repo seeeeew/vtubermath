@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<title>VTuber subathon calculator</title>
+<style>
+	body {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		background: #122798;
+		color: #7C90FC;
+		font-family: sans-serif;
+		font-size: large;
+	}
+	input {
+		text-align: right;
+		background: #08103C;
+		color: #7C90FC;
+		border: 2px solid #4A64EE;
+		font-size: large;
+		width: 6em;
+	}
+	.description {
+		max-width: 400px;
+		text-align: center;
+	}
+</style>
+<h1>we do the vtuber subathon math</h1>
+<table>
+	<tr>
+		<td><input id=bits></td>
+		<td><label for=bits>bits</label></td>
+	</tr>
+	<tr>
+		<td><input id=dollars></td>
+		<td><label for=dollars>dollars</label></td>
+	</tr>
+	<tr>
+		<td><input id=t1subs></td>
+		<td><label for=t1subs>T1 subs</label></td>
+	</tr>
+	<tr>
+		<td><input id=t2subs></td>
+		<td><label for=t2subs>T2 subs</label></td>
+	</tr>
+	<tr>
+		<td><input id=t3subs></td>
+		<td><label for=t3subs>T3 subs</label></td>
+	</tr>
+	<tr>
+		<td><input id=minutes></td>
+		<td><label for=minutes>minutes</label></td>
+	</tr>
+</table>
+<p class=description>
+	Enter/change any value, all others will automatically update. Values will reset on page refresh.
+</p>
+<script>
+	const inputs = document.querySelectorAll("input");
+	inputs.forEach(input => {
+		input.value = "";
+		input.inputMode = "numeric";
+	});
+	const factors = {
+		bits: 0.01,
+		dollars: 1,
+		t1subs: 2.5,
+		t2subs: 5,
+		t3subs: 12.5,
+		minutes: 0.5
+	};
+	function update(event) {
+		const input = event.target;
+		input.value = input.value.replaceAll(/[^0-9.-]/g, "");
+		inputs.forEach(output => {
+			if (input != output) {
+				output.value = Math.round(input.value * factors[input.id] / factors[output.id] * 100) / 100;
+			}
+		});
+	}
+	function updateAfter(event) {
+		setImmediate(update.bind(this, event));
+	}
+	document.querySelectorAll("input").forEach(element => {
+		["change", "keyup"].forEach(event => element.addEventListener(event, update));
+		["paste", "cut"].forEach(event => element.addEventListener(event, updateAfter));
+	});
+</script>
