@@ -79,7 +79,7 @@
 		});
 	}
 	function updateAfter(event) {
-		setImmediate(update.bind(this, event));
+		setTimeout(update.bind(this, event), 0);
 	}
 	document.querySelectorAll("input").forEach(element => {
 		["change", "keyup"].forEach(event => element.addEventListener(event, update));
