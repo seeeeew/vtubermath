@@ -26,55 +26,37 @@
 	}
 </style>
 <h1>we do the vtuber subathon math</h1>
-<table>
-	<tr>
-		<td><input id=bits></td>
-		<td><label for=bits>bits</label></td>
-	</tr>
-	<tr>
-		<td><input id=dollars></td>
-		<td><label for=dollars>dollars</label></td>
-	</tr>
-	<tr>
-		<td><input id=t1subs></td>
-		<td><label for=t1subs>T1 subs</label></td>
-	</tr>
-	<tr>
-		<td><input id=t2subs></td>
-		<td><label for=t2subs>T2 subs</label></td>
-	</tr>
-	<tr>
-		<td><input id=t3subs></td>
-		<td><label for=t3subs>T3 subs</label></td>
-	</tr>
-	<tr>
-		<td><input id=minutes></td>
-		<td><label for=minutes>minutes</label></td>
-	</tr>
-</table>
+<table><tbody id=inputs></tbody></table>
 <p class=description>
 	Enter/change any value, all others will automatically update. Values will reset on page refresh.
 </p>
 <script>
+	const rates = {
+		bits: 0.01*60,
+		dollars: 1*60,
+		T1_subs: 3*60,
+		T2_subs: 6*60,
+		T3_subs: 15*60,
+		raiders: 10,
+		followers: 30,
+		minutes: 60,
+		seconds: 1
+	};
+	const container = document.getElementById("inputs");
+	Object.keys(rates).forEach((key) => {
+		container.innerHTML += `<tr><td><input id=${key}></td><td><label for=${key}>${key.replace("_", " ")}</label></td></tr>`;
+	});
 	const inputs = document.querySelectorAll("input");
 	inputs.forEach(input => {
 		input.value = "";
 		input.inputMode = "numeric";
 	});
-	const factors = {
-		bits: 0.01,
-		dollars: 1,
-		t1subs: 2.5,
-		t2subs: 5,
-		t3subs: 12.5,
-		minutes: 0.5
-	};
 	function update(event) {
 		const input = event.target;
 		input.value = input.value.replaceAll(/[^0-9.-]/g, "");
 		inputs.forEach(output => {
 			if (input != output) {
-				output.value = Math.round(input.value * factors[input.id] / factors[output.id] * 100) / 100;
+				output.value = Math.round(input.value * rates[input.id] / rates[output.id] * 100) / 100;
 			}
 		});
 	}
@@ -86,3 +68,4 @@
 		["paste", "cut"].forEach(event => element.addEventListener(event, updateAfter));
 	});
 </script>
+<!-- released under CC0 1.0 - "no rights reserved" - https://creativecommons.org/publicdomain/zero/1.0/ -->
