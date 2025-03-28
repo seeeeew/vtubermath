@@ -34,17 +34,19 @@
 	const rates = {
 		bits: 0.01*60,
 		dollars: 1*60,
-		T1_subs: 3*60,
-		T2_subs: 6*60,
-		T3_subs: 15*60,
+		"T1 subs (-35%)": 3*60*(1-.35),
+		"T1 subs": 3*60,
+		"T2 subs": 6*60,
+		"T3 subs": 15*60,
 		raiders: 10,
 		followers: 30,
 		minutes: 60,
 		seconds: 1
 	};
 	const container = document.getElementById("inputs");
-	Object.keys(rates).forEach((key) => {
-		container.innerHTML += `<tr><td><input id=${key}></td><td><label for=${key}>${key.replace("_", " ")}</label></td></tr>`;
+	Object.entries(rates).forEach(([key, value]) => {
+		const id = key.replace(/\W+/g, "");
+		container.innerHTML += `<tr><td><input id=${id} data-rate=${value}></td><td><label for=${id}>${key}</label></td></tr>`;
 	});
 	const inputs = document.querySelectorAll("input");
 	inputs.forEach(input => {
@@ -56,7 +58,7 @@
 		input.value = input.value.replaceAll(/[^0-9.-]/g, "");
 		inputs.forEach(output => {
 			if (input != output) {
-				output.value = Math.round(input.value * rates[input.id] / rates[output.id] * 100) / 100;
+				output.value = Math.round(input.value * input.dataset.rate / output.dataset.rate * 100) / 100;
 			}
 		});
 	}
